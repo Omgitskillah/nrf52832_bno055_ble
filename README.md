@@ -21,5 +21,5 @@ This repo contains bring-up firmware to collect and transmit IMU data.
 3. Simplified nRF52832 BLE driver
    - nRF52832 should be able to pair and stream UART data over BLE
 4. Main System Application
-   - The system must collect and transmit BNO055 data over BLE to a PC/Mac app at 5Hz
+   - The system must collect and transmit BNO055 data over BLE to a PC/Mac app at 100Hz
 5. The PC/Mac app must be able to use IMU data to control orientation and position of a 3D image according to IMU data
