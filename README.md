@@ -3,6 +3,10 @@
 ## Overview
 This repo contains bring-up firmware to collect and transmit IMU data.
 
+## Prerequisite
+In order to build the project on Segger Embedded Studio, the nRF5_SDK_15.2.0_9412b96 at this [link](https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/nRF5_SDK_15.2.0_9412b96.zip).
+Install the nRF5_SDK_15.2.0_9412b96 folder in the git root folder. 
+
 ## Hardware used
 1. nRF52832
 2. BNO055
