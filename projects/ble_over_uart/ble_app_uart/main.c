@@ -717,7 +717,11 @@ int main(void)
     advertising_start();
 
     uint32_t       err_code;
+    
     static uint8_t data_array[10] = "killah";
+    //Add sensor data here
+
+
     uint16_t length = 0;
     length = sizeof(data_array);
 
