@@ -1,1 +1,14 @@
 nRF5_SDK_15.2.0_9412b96/
+components/
+external/
+modules/
+integration/
+license.txt
+nRF5x_MDK_8_17_0_IAR_NordicLicense.msi
+nRF5x_MDK_8_17_0_Keil4_NordicLicense.msi
+config/
+documentation/
+external_tools/
+projects/peripheral/
+projects/ble_over_uart/ble_app_uart/pca10040/s132/ses/Output/nrf52832_bno055_ble_s132 Release/
+.gitignore.rej
