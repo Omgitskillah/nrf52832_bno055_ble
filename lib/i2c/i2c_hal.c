@@ -11,9 +11,11 @@
 #include "nrf_delay.h"
 
 /* System log info inlcudes */
+#ifdef LOG_I2C_HAL
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
+#endif
 
 /*lib specific includes */
 #include "i2c_hal.h"
@@ -81,8 +83,11 @@ uint8_t i2c_read( uint8_t _address, uint8_t _length)
  */
 __STATIC_INLINE void data_handler(uint8_t data)
 {
-    //log data for now, TODO: present data appropriately here
+
+#ifdef LOG_I2C_HAL
+    //log data for now, //TODO: present data appropriately here
     NRF_LOG_INFO("i2c data: %d", data);
+#endif
 }
 
 /**
