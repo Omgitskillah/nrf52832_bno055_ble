@@ -2,13 +2,12 @@
 * I2C HAL for nRF52832
 */
 
-/* System includes for I2C support */
+/* System includes */
 #include <stdio.h>
 #include "boards.h"
 #include "app_util_platform.h"
 #include "app_error.h"
 #include "nrf_drv_twi.h"
-#include "nrf_delay.h"
 
 /* System log info inlcudes */
 #ifdef LOG_I2C_HAL
@@ -33,7 +32,7 @@ static volatile bool m_xfer_done = false;
 uint8_t i2c_data;
 
 /**
- * Write data to device on I2C bas
+ * Write data to device on I2C bus
  * 
  * Arguments
  * ---------------
@@ -43,18 +42,20 @@ uint8_t i2c_data;
  * 
  * return
  * ---------------
- * void
+ * true if successful
  */
-void i2c_write( uint8_t _address, uint8_t const *_p_data, uint8_t _length)
+bool i2c_write( uint8_t _address, uint8_t const *_p_data, uint8_t _length, bool _restart)
 {
+    // Note that there is no error check during this process
     ret_code_t err_code;
-    err_code = nrf_drv_twi_tx(&m_twi, _address, _p_data, _length, false);
+    err_code = nrf_drv_twi_tx(&m_twi, _address, _p_data, _length, _restart);
     APP_ERROR_CHECK(err_code);
     while (m_xfer_done == false);
+    return (err_code == 0) ? true : false;
 }
 
 /**
- * Write data to device on I2C bas
+ * Write data to device on I2C bus
  * 
  * Arguments
  * ---------------
@@ -64,18 +65,17 @@ void i2c_write( uint8_t _address, uint8_t const *_p_data, uint8_t _length)
  * 
  * return
  * ---------------
- * void
+ * true if successful
  */
-uint8_t i2c_read( uint8_t _address, uint8_t _length)
+bool i2c_read( uint8_t _address, uint8_t * _buff, uint8_t _length)
 {
-    uint8_t _data;
-
+    // Note that there is no error check during this process
     m_xfer_done = false;
     /* Read 1 byte from the specified address - skip 3 bits dedicated for fractional part of temperature. */
-    ret_code_t err_code = nrf_drv_twi_rx(&m_twi, _address, &_data, _length);
+    ret_code_t err_code = nrf_drv_twi_rx(&m_twi, _address, _buff, _length);
     APP_ERROR_CHECK(err_code);
-
-    return _data;
+    while (m_xfer_done == false);
+    return (err_code == 0) ? true : false;
 }
 
 /**
@@ -85,7 +85,8 @@ __STATIC_INLINE void data_handler(uint8_t data)
 {
 
 #ifdef LOG_I2C_HAL
-    //log data for now, //TODO: present data appropriately here
+    //log data for now, 
+    //TODO: present data appropriately here
     NRF_LOG_INFO("i2c data: %d", data);
 #endif
 }
@@ -112,14 +113,19 @@ void twi_handler(nrf_drv_twi_evt_t const * p_event, void * p_context)
 /**
  * @brief UART initialization.
  */
-void twi_init (uint32_t _scl, uint32_t _sda, nrf_drv_twi_frequency_t _freq)
+bool twi_init (uint32_t _scl, uint32_t _sda)
 {
     ret_code_t err_code;
 
+    /**
+     * .scl                = ARDUINO_SCL_PIN,
+     * .sda                = ARDUINO_SDA_PIN,
+     * */
+    
     const nrf_drv_twi_config_t twi_device = {
        .scl                = _scl,
        .sda                = _sda,
-       .frequency          = _freq, // NRF_DRV_TWI_FREQ_400K for bno055
+       .frequency          = NRF_DRV_TWI_FREQ_400K, // NRF_DRV_TWI_FREQ_400K for bno055
        .interrupt_priority = APP_IRQ_PRIORITY_HIGH, //TODO: consider making this configurable
        .clear_bus_init     = false
     };
@@ -128,4 +134,6 @@ void twi_init (uint32_t _scl, uint32_t _sda, nrf_drv_twi_frequency_t _freq)
     APP_ERROR_CHECK(err_code);
 
     nrf_drv_twi_enable(&m_twi);
+
+    return (err_code == 0) ? true : false;
 }
