@@ -24,7 +24,6 @@
  * Unit selection fx
  * Data output format fx
  * fx to get calibration data
- * Read output data registers (from page 34)
  * Handle interrupts and how to set them
  * Self test mode 
 */
@@ -33,8 +32,17 @@
 bool bno055_write_reg(uint8_t _reg, uint8_t _data);
 bool bno055_read_reg(uint8_t _reg, uint8_t *_buff, uint8_t _length);
 bool bno055_get_chip_ID(uint8_t *_buff);
-bool read_grv_data(uint16_t * _grv_data_arr);
-bool read_data_regs(uint8_t * regs, uint16_t * _buff);
+
+bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len);
+bool read_eul_heading_data(uint16_t * _data_arr);
+bool read_eul_roll_data(uint16_t * _data_arr);
+bool read_eul_pitch_data(uint16_t * _data_arr);
+bool read_qua_data(uint16_t * _data_arr);
+bool read_acc_data(uint16_t * _data_arr);
+bool read_mag_data(uint16_t * _data_arr);
+bool read_gyr_data(uint16_t * _data_arr);
+bool read_lia_data(uint16_t * _data_arr);
+bool read_grv_data(uint16_t * _data_arr);
 
 /**
  * fx: void bno055_write_reg(uint8_t _reg, uint8_t _data)
@@ -144,34 +152,38 @@ bool bno055_set_op_mode(uint8_t _mode)
  * ---------------
  * true if successful 
  */
-bool read_data_regs(uint8_t * regs, uint16_t * _buff)
+bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len)
 {
-  uint8_t bytes[6];
-  for(int i = 0; i < sizeof(regs); i++)
+  uint8_t len_reg = sizeof(regs);
+  uint8_t bytes[len_reg];
+
+  for(int i = 0; i < len_reg; i++)
   {
     if(!bno055_read_reg( regs[i], &bytes[i], LEN_DATA)) return false; 
     // if at any point this sequence fails, return false
   }
   //populate  buffer argument
-  _buff[0] = (uint16_t)(bytes[4] << 8) | bytes[5];
-  _buff[1] = (uint16_t)(bytes[2] << 8) | bytes[3];
-  _buff[2] = (uint16_t)(bytes[0] << 8) | bytes[1];  
+  for(int j = 0; j < _buff_len; j++)
+  {
+    _buff[j] = (uint16_t)(bytes[len_reg-((j+1)*2)] << 8) | bytes[len_reg-((j*2)+1)];
+  } 
 }
 
 /**
- * fx: bool read_grv_data(uint16_t * _grv_data_arr)
- * reads grv reg data and stores it in a uint16_t data array of size 3
- * _grv_data_arr[0] = x, _grv_data_arr[1] = y, _grv_data_arr[2] = z
+ * fx: bool read_<sensor>_data(uint16_t * _data_arr)
+ * reads grv reg data and stores it in a uint16_t data array of variable size
+ * _<sensor>_data_arr[0] = x, _<sensor>_data_arr[1] = y, _<sensor>_data_arr[2] = z, _<sensor>_data_arr[3] = w
  * 
  * Arguments
  * ---------------
- * _grv_data_arr - array to hold the data, must be uint16_t and size 3
+ * _<sensor>_data_arr - array to hold the data, must be uint16_t and size 3
  * 
  * return
  * ---------------
  * true if successful 
  */
-bool read_grv_data(uint16_t * _grv_data_arr)
+
+bool read_grv_data(uint16_t * _data_arr)
 {
   uint8_t regs[6] = {
     (uint8_t)REG_GRV_Data_Z_MSB,
@@ -181,5 +193,99 @@ bool read_grv_data(uint16_t * _grv_data_arr)
     (uint8_t)REG_GRV_Data_X_MSB,
     (uint8_t)REG_GRV_Data_X_LSB};
   
-  return read_data_regs(regs, _grv_data_arr);
+  return read_data_regs(regs, _data_arr, 3);
+}
+
+bool read_lia_data(uint16_t * _data_arr)
+{
+  uint8_t regs[6] = {
+    (uint8_t)REG_LIA_Data_Z_MBS,
+    (uint8_t)REG_LIA_Data_Z_LSB,
+    (uint8_t)REG_LIA_Data_Y_MBS,
+    (uint8_t)REG_LIA_Data_Y_LSB,
+    (uint8_t)REG_LIA_Data_X_MBS,
+    (uint8_t)REG_LIA_Data_X_LSB};
+  
+  return read_data_regs(regs, _data_arr, 3);
+}
+
+bool read_gyr_data(uint16_t * _data_arr)
+{
+  uint8_t regs[6] = {
+    (uint8_t)REG_GYR_DATA_Z_MSB,
+    (uint8_t)REG_GYR_DATA_Z_LSB,
+    (uint8_t)REG_GYR_DATA_Y_MSB,
+    (uint8_t)REG_GYR_DATA_Y_LSB,
+    (uint8_t)REG_GYR_DATA_X_MSB,
+    (uint8_t)REG_GYR_DATA_X_LSB};
+  
+  return read_data_regs(regs, _data_arr, 3);
+}
+
+bool read_mag_data(uint16_t * _data_arr)
+{
+  uint8_t regs[6] = {
+    (uint8_t)REG_MAG_DATA_Z_MSB,
+    (uint8_t)REG_MAG_DATA_Z_LSB,
+    (uint8_t)REG_MAG_DATA_Y_MSB,
+    (uint8_t)REG_MAG_DATA_Y_LSB,
+    (uint8_t)REG_MAG_DATA_X_MSB,
+    (uint8_t)REG_MAG_DATA_X_LSB};
+  
+  return read_data_regs(regs, _data_arr, 3);
+}
+
+bool read_acc_data(uint16_t * _data_arr)
+{
+  uint8_t regs[6] = {
+    (uint8_t)REG_ACC_DATA_Z_MSB,
+    (uint8_t)REG_ACC_DATA_Z_LSB,
+    (uint8_t)REG_ACC_DATA_Y_MSB,
+    (uint8_t)REG_ACC_DATA_Y_LSB,
+    (uint8_t)REG_ACC_DATA_X_MSB,
+    (uint8_t)REG_ACC_DATA_X_LSB};
+  
+  return read_data_regs(regs, _data_arr, 3);
+}
+
+bool read_qua_data(uint16_t * _data_arr) // Size of 4 elements
+{
+  uint8_t regs[8] = {
+    (uint8_t)REG_QUA_Data_z_MSB,
+    (uint8_t)REG_QUA_Data_z_LSB,
+    (uint8_t)REG_QUA_Data_y_MSB,
+    (uint8_t)REG_QUA_Data_y_LSB,
+    (uint8_t)REG_QUA_Data_x_MSB,
+    (uint8_t)REG_QUA_Data_x_LSB,
+    (uint8_t)REG_QUA_Data_w_MSB,
+    (uint8_t)REG_QUA_Data_w_LSB};
+  
+  return read_data_regs(regs, _data_arr, 4);
+}
+
+bool read_eul_pitch_data(uint16_t * _data_arr) // Size of 1 elements
+{
+  uint8_t regs[2] = {
+    (uint8_t)REG_EUL_Pitch_MSB,
+    (uint8_t)REG_EUL_Pitch_LSB};
+  
+  return read_data_regs(regs, _data_arr, 1);
+}
+
+bool read_eul_roll_data(uint16_t * _data_arr) // Size of 1 elements
+{
+  uint8_t regs[2] = {
+    (uint8_t)REG_EUL_Roll_MSB,
+    (uint8_t)REG_EUL_Roll_LSB};
+  
+  return read_data_regs(regs, _data_arr, 1);
+}
+
+bool read_eul_heading_data(uint16_t * _data_arr) // Size of 1 elements
+{
+  uint8_t regs[2] = {
+    (uint8_t)REG_EUL_Heading_MSB,
+    (uint8_t)REG_EUL_Heading_LSB};
+  
+  return read_data_regs(regs, _data_arr, 1);
 }
