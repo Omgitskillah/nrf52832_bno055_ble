@@ -13,21 +13,21 @@
 #define REG_OPR_MODE    0x3D
 #define LEN_OPR_MODE    0x01    
 // Operation Modes
-#define CONFIGMODE      00000000b
-// Non-fusionmodes
-#define ACCONLY         00000001b  
-#define MAGONLY         00000010b
-#define GYROONLY        00000011b
-#define ACCMAG          00000100b
-#define ACCGYRO         00000101b
-#define MAGGYRO         00000110b
-#define AMG             00000111b
-// Fusion modes
-#define IMU             00001000b
-#define COMPASS         00001001b
-#define M4G             00001010b
-#define NDOF_FMC_OFF    00001011b
-#define NDOF            00001100b
+#define CONFIGMODE      0b00000000
+// Non-fusionmodesb0
+#define ACCONLY         0b00000001  
+#define MAGONLY         0b00000010
+#define GYROONLY        0b00000011
+#define ACCMAG          0b00000100
+#define ACCGYRO         0b00000101
+#define MAGGYRO         0b00000110
+#define AMG             0b00000111
+// Fusion modesb0
+#define IMU             0b00001000
+#define COMPASS         0b00001001
+#define M4G             0b00001010
+#define NDOF_FMC_OFF    0b00001011
+#define NDOF            0b00001100
 
 #define OPR_MODE_DELAY  20 // in milliseconds
 

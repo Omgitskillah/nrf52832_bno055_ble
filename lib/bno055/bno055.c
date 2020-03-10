@@ -32,17 +32,8 @@
 bool bno055_write_reg(uint8_t _reg, uint8_t _data);
 bool bno055_read_reg(uint8_t _reg, uint8_t *_buff, uint8_t _length);
 bool bno055_get_chip_ID(uint8_t *_buff);
-
 bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len);
-bool read_eul_heading_data(uint16_t * _data_arr);
-bool read_eul_roll_data(uint16_t * _data_arr);
-bool read_eul_pitch_data(uint16_t * _data_arr);
-bool read_qua_data(uint16_t * _data_arr);
-bool read_acc_data(uint16_t * _data_arr);
-bool read_mag_data(uint16_t * _data_arr);
-bool read_gyr_data(uint16_t * _data_arr);
-bool read_lia_data(uint16_t * _data_arr);
-bool read_grv_data(uint16_t * _data_arr);
+
 
 /**
  * fx: void bno055_write_reg(uint8_t _reg, uint8_t _data)
@@ -167,6 +158,26 @@ bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len)
   {
     _buff[j] = (uint16_t)(bytes[len_reg-((j+1)*2)] << 8) | bytes[len_reg-((j*2)+1)];
   } 
+}
+
+/**
+ * fx: bool bno055_init()
+ * setup bno055
+ * 
+ * Arguments
+ * -----------
+ * 
+ * return
+ * -----------
+ * true if successful
+ */
+bool bno055_init(uint8_t * _id)
+{
+  // set to 
+  if(!bno055_set_op_mode(NDOF)) return false;
+  if(!bno055_get_chip_ID(_id)) return false;
+
+  return true;
 }
 
 /**
