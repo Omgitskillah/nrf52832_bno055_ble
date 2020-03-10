@@ -6,7 +6,6 @@ integration/
 license.txt
 nRF5x_MDK_8_17_0_IAR_NordicLicense.msi
 nRF5x_MDK_8_17_0_Keil4_NordicLicense.msi
-config/
 documentation/
 external_tools/
 projects/peripheral/
@@ -15,3 +14,13 @@ projects/ble_over_uart/ble_app_uart/pca10040/s132/ses/Output/nrf52832_bno055_ble
 examples/
 lib/.vscode/c_cpp_properties.json
 lib/.vscode/settings.json
+.vscode/settings.json
+config/nrf52810/armgcc/generic_gcc_nrf52.ld
+config/nrf52810/config/sdk_config.h
+config/nrf52810/ses/flash_placement.xml
+config/nrf52832/armgcc/generic_gcc_nrf52.ld
+config/nrf52832/config/sdk_config.h
+config/nrf52832/ses/flash_placement.xml
+config/nrf52840/armgcc/generic_gcc_nrf52.ld
+config/nrf52840/config/sdk_config.h
+config/nrf52840/ses/flash_placement.xml
