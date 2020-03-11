@@ -572,18 +572,6 @@ static void timer_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-// TODO: Move this to main.c with log enable define 
-/**@brief Function for initializing the nrf log module. */
-static void log_init(void)
-{
-#ifdef LOG_ENABLED    
-    ret_code_t err_code = NRF_LOG_INIT(NULL);
-    APP_ERROR_CHECK(err_code);
-
-    NRF_LOG_DEFAULT_BACKENDS_INIT();
-#endif
-}
-
 /**@brief Function for initializing power management.
  */
 static void power_management_init(void)
@@ -604,7 +592,7 @@ static void db_discovery_init(void)
  *
  * @details Handles any pending log operations, then sleeps until the next event occurs.
  */
-static void idle_state_handle(void)
+void idle_state_handle(void)
 {
     bool log_process = false;
 #ifdef LOG_BLE_UART
@@ -616,7 +604,7 @@ static void idle_state_handle(void)
     }
 }
 
-void ble_uart_init()
+void ble_uart_init(void)
 {
     timer_init();
     uart_init();
@@ -629,22 +617,22 @@ void ble_uart_init()
     scan_init();   
 }
 
-void ble_uart_start_scan()
+void ble_uart_scan_start(void)
 {
-    scan_init();
+    scan_start();
 }
 
-void ble_uart_idle_handle()
+void ble_uart_idle_state_handle(void)
 {
     idle_state_handle();
 }
 
-bool send_over_ble_uart(uint8_t * p_data, uint8_t data_len)
+bool ble_uart_send_over_ble(uint8_t * _string, uint8_t data_len)
 {
     ret_code_t ret_val;
     do
     {
-        ret_val = ble_nus_c_string_send(&m_ble_nus_c, p_data, data_len);
+        ret_val = ble_nus_c_string_send(&m_ble_nus_c, _string, data_len);
         if ((ret_val != NRF_SUCCESS) && (ret_val != NRF_ERROR_BUSY))
         {
 #ifdef LOG_BLE_UART
@@ -653,4 +641,9 @@ bool send_over_ble_uart(uint8_t * p_data, uint8_t data_len)
             APP_ERROR_CHECK(ret_val);
         }
     } while (ret_val == NRF_ERROR_BUSY);
+}
+
+void ble_uart_send_to_uart(uint8_t * _string)
+{
+    printf("BLE UART central example started.\r\n"); // This will print to UART only if retargeted
 }
