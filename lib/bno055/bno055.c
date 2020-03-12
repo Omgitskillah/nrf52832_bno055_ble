@@ -11,6 +11,7 @@
 #include "nrf_log_default_backends.h"
 #endif
 
+#include "pca10040.h"
 #include "ble_advdata.h"
 #include "bno055.h"
 #include "i2c_hal.h"
@@ -175,6 +176,8 @@ bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len)
 bool bno055_init(uint8_t * _id)
 {
   // set to 
+  twi_init (ARDUINO_SCL_PIN, ARDUINO_SDA_PIN);
+
   if(!bno055_set_op_mode(NDOF)) return false;
   if(!bno055_get_chip_ID(_id)) return false;
 

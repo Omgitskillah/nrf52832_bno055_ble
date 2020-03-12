@@ -17,8 +17,8 @@ int main(void)
 {
     ble_uart_peripheral_init();
 
-//    uint8_t bno055_id = 0;
-//    bno055_init(&bno055_id);
+    uint8_t bno055_id = 0;
+    bno055_init(&bno055_id);
 
 #ifdef LOG_ENABLED
     log_init();
