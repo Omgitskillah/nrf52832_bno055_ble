@@ -11,6 +11,7 @@
 #include "nrf_log_default_backends.h"
 #endif
 
+#include "ble_advdata.h"
 #include "bno055.h"
 #include "i2c_hal.h"
 #include "bno055_conf.h"

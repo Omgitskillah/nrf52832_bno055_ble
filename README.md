@@ -37,6 +37,7 @@ Install the nRF5_SDK_15.2.0_9412b96 folder in the git root folder.
 ../../../../../../components/ble/ble_advertising
 ../../../../../../components/ble/ble_db_discovery
 ../../../../../../components/ble/ble_dtm
+../../../../../../components/ble/ble_link_ctx_manager
 ../../../../../../components/ble/ble_racp
 ../../../../../../components/ble/ble_services/ble_ancs_c
 ../../../../../../components/ble/ble_services/ble_ans_c
@@ -70,6 +71,7 @@ Install the nRF5_SDK_15.2.0_9412b96 folder in the git root folder.
 ../../../../../../components/drivers_nrf/usbd
 ../../../../../../components/libraries/atomic
 ../../../../../../components/libraries/atomic_fifo
+../../../../../../components/libraries/atomic_flags
 ../../../../../../components/libraries/balloc
 ../../../../../../components/libraries/bootloader/ble_dfu
 ../../../../../../components/libraries/bsp
@@ -167,7 +169,7 @@ Install the nRF5_SDK_15.2.0_9412b96 folder in the git root folder.
 ../../../../../../modules/nrfx/hal
 ../../../../../../modules/nrfx/mdk
 ../config
-../../../../../../lib/ble_uart
+../../../../../../lib/ble_uart /ble_uart_peripheral
 ../../../../../../lib/i2c
 ../../../../../../lib/bno055
 ```

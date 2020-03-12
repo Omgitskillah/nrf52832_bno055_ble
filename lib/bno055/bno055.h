@@ -1,5 +1,6 @@
 #ifndef _BNO055_H_
 #define _BNO055_H_
+#include "ble_advdata.h"
 
 bool bno055_init(uint8_t * _id);
 bool read_eul_heading_data(uint16_t * _data_arr);

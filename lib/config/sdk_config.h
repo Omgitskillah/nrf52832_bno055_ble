@@ -5717,7 +5717,7 @@
  
 
 #ifndef TWI0_USE_EASY_DMA
-#define TWI0_USE_EASY_DMA 0
+#define TWI0_USE_EASY_DMA 1
 #endif
 
 // </e>
