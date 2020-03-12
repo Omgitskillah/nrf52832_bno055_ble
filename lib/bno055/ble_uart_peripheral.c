@@ -36,7 +36,7 @@
 
 #define APP_BLE_CONN_CFG_TAG            1                                           /**< A tag identifying the SoftDevice BLE configuration. */
 
-#define DEVICE_NAME                     "Nordic_UART"                               /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                     "bno055"                               /**< Name of device. Will be included in the advertising data. */
 #define NUS_SERVICE_UUID_TYPE           BLE_UUID_TYPE_VENDOR_BEGIN                  /**< UUID type for the Nordic UART Service (vendor specific). */
 
 #define APP_BLE_OBSERVER_PRIO           3                                           /**< Application's BLE observer priority. You shouldn't need to modify this value. */
@@ -677,9 +677,25 @@ static void advertising_start(void)
 }
 
 
-void ble_uart_peripheral_print_to_uart(uint8_t * _string)
+void ble_uart_peripheral_print_to_uart(uint8_t * _string, uint32_t _len)
 {
-    printf(_string); // will only work if printf is rerouted to uart
+    uint32_t err_code;
+
+    for (uint32_t i = 0; i < _len; i++)
+     {
+      do
+      {
+          err_code = app_uart_put(_string[i]);
+          if ((err_code != NRF_SUCCESS) && (err_code != NRF_ERROR_BUSY))
+          {
+#ifdef LOG_BLE_UART_PERIPHERAL                    
+              NRF_LOG_ERROR("Failed write to UART. Error 0x%x. ", err_code);
+#endif                    
+              APP_ERROR_CHECK(err_code);
+          }
+      } while (err_code == NRF_ERROR_BUSY);
+    }
+    while (app_uart_put('\n') == NRF_ERROR_BUSY);
 }
 
 void ble_uart_peripheral_init(void)
