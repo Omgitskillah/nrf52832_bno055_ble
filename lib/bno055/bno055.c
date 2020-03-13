@@ -13,8 +13,8 @@
 
 #include "pca10040.h"
 #include "ble_advdata.h"
+#include "soft_i2c.h"
 #include "bno055.h"
-#include "i2c_hal.h"
 #include "bno055_conf.h"
 
 /**
@@ -53,9 +53,8 @@ bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len);
 bool bno055_write_reg(uint8_t _reg, uint8_t _data)
 {
   uint8_t _buff[2] = {_reg, _data};
-  uint8_t bno055w = bno055_address | 0x00;
   //write sequence
-  if(!i2c_write( bno055w, _buff, sizeof(_buff), false)) return false;
+  if( !i2c_write( bno055_address, _buff, sizeof(_buff) ) ) return false;
   // debug data here
   return true;
 }
@@ -77,12 +76,10 @@ bool bno055_write_reg(uint8_t _reg, uint8_t _data)
 bool bno055_read_reg(uint8_t _reg, uint8_t *_buff, uint8_t _length)
 {
   uint8_t reg_buff[1] = {_reg};
-  uint8_t bno055w = bno055_address | 0x00;
-  uint8_t bno055r = bno055_address | 0x01;
   //write sequence
-  if(!i2c_write( bno055w, reg_buff, 1, true)) return false;
+  if( !i2c_write( bno055_address, reg_buff, sizeof(reg_buff) ) ) return false;
   //Read sequence
-  if(!i2c_read( bno055r, _buff, _length)) return false;
+  if( !i2c_read( bno055_address, _buff, _length) ) return false;
 
 #ifdef LOG_BNO055
     NRF_LOG_INFO("reg data: %s");
@@ -176,7 +173,7 @@ bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len)
 bool bno055_init(uint8_t * _id)
 {
   // set to 
-  twi_init (ARDUINO_SCL_PIN, ARDUINO_SDA_PIN);
+  i2c_init();
 
   if(!bno055_set_op_mode(NDOF)) return false;
   if(!bno055_get_chip_ID(_id)) return false;
