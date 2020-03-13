@@ -3,7 +3,6 @@
 
 #include "nrf_delay.h"
 #include "ble_uart_peripheral.h"
-#include "bno055.h"
 
 #ifdef LOG_BLE_UART_PERIPHERAL
 #include "nrf_log.h"
@@ -16,9 +15,6 @@
 int main(void)
 {
     ble_uart_peripheral_init();
-
-    uint8_t bno055_id = 0;
-    bno055_init(&bno055_id);
 
 #ifdef LOG_ENABLED
     log_init();
