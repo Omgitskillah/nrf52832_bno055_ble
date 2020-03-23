@@ -108,6 +108,7 @@
           <file file_name="../../../../../../lib/i2c/i2c_hal.c" />
           <file file_name="../../../../../../lib/i2c/i2c_hal.h" />
         </folder>
+        <folder Name="mpu6050" />
       </folder>
     </folder>
     <folder Name="nRF_Segger_RTT">
