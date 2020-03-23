@@ -2,9 +2,10 @@
 #include <string.h>
 
 #include "nrf_delay.h"
-
 #include "ble_uart_peripheral.h"
-#include "bno055.h"
+
+
+#include "htu21d.h"
 
 #ifdef LOG_BLE_UART_PERIPHERAL
 #include "nrf_log.h"
@@ -19,7 +20,6 @@ extern uint32_t _sda;
  */
 int main(void)
 {
-    uint8_t bno055_id = 0;
     /*set the scl and sda pins based on "pca10040.h"
      defaults to _scl = ARDUINO_2_PIN; and _sda = ARDUINO_3_PIN;
      if nothing is set
@@ -28,7 +28,10 @@ int main(void)
 //    _sda = ARDUINO_7_PIN;
 
     ble_uart_peripheral_init();
-    bno055_init(&bno055_id); // init the bno and read the id
+    htu21d_init();
+
+    uint16_t temperature = 0;
+    uint16_t humidity = 0;
 #ifdef LOG_ENABLED
     log_init();
 #endif    
@@ -41,17 +44,19 @@ int main(void)
     // Enter main loop.
     for (;;)
     {
+        temperature = htu21d_nh_temperature();
+        humidity = htu21d_nh_rhumidity();
         uint8_t hello[] = "hello world";
-        uint8_t print_id[20] = {0};
+        uint8_t print_htu[35] = {0};
 
-        sprintf(print_id, "bno055 id: %d \n", bno055_id);
+        sprintf(print_htu, "temperature: %d, humidity: %d\n", temperature, humidity);
         
-        ble_uart_peripheral_send_to_ble(hello, sizeof(hello));
-        ble_uart_peripheral_print_to_uart(hello, sizeof(hello));
+//        ble_uart_peripheral_send_to_ble(hello, sizeof(hello));
+//        ble_uart_peripheral_print_to_uart(hello, sizeof(hello));
 
-        ble_uart_peripheral_send_to_ble(print_id, sizeof(print_id));
-        ble_uart_peripheral_print_to_uart(print_id, sizeof(print_id));
-
+//        ble_uart_peripheral_send_to_ble(print_htu, sizeof(print_htu));
+//        ble_uart_peripheral_print_to_uart(print_htu, sizeof(print_htu));
+        ble_uart_peripheral_print_to_uart(".......................", sizeof(print_htu));
         nrf_delay_ms(1000); //delay for 1000ms
         ble_uart_peripheral_idle_state_handle();
     }

@@ -683,17 +683,18 @@ void ble_uart_peripheral_print_to_uart(uint8_t * _string, uint32_t _len)
 
     for (uint32_t i = 0; i < _len; i++)
      {
-      do
-      {
-          err_code = app_uart_put(_string[i]);
-          if ((err_code != NRF_SUCCESS) && (err_code != NRF_ERROR_BUSY))
-          {
+         if(_string[i] == '\n') break;
+         do        
+         {
+            err_code = app_uart_put(_string[i]);
+            if ((err_code != NRF_SUCCESS) && (err_code != NRF_ERROR_BUSY))
+            {
 #ifdef LOG_BLE_UART_PERIPHERAL                    
-              NRF_LOG_ERROR("Failed write to UART. Error 0x%x. ", err_code);
+                NRF_LOG_ERROR("Failed write to UART. Error 0x%x. ", err_code);
 #endif                    
-              APP_ERROR_CHECK(err_code);
-          }
-      } while (err_code == NRF_ERROR_BUSY);
+                APP_ERROR_CHECK(err_code);
+            }
+         } while (err_code == NRF_ERROR_BUSY);
     }
     while (app_uart_put('\n') == NRF_ERROR_BUSY);
 }

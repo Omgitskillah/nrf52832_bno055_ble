@@ -26,3 +26,4 @@ config/nrf52840/config/sdk_config.h
 config/nrf52840/ses/flash_placement.xml
 examples - Copy/ble_peripheral/ble_app_uart/pca10040/s132/ses/Output/
 project/ble_peripheral/ble_app_uart/pca10040/s132/ses/Output/
+lib/htu21d/Documents/invoice_715374.pdf
