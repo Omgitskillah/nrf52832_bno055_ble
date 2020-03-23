@@ -10,11 +10,11 @@
 #include "nrf_drv_twi.h"
 
 /* System log info inlcudes */
-#ifdef LOG_I2C_HAL
+//#ifdef LOG_I2C_HAL
 #include "nrf_log.h"
 #include "nrf_log_ctrl.h"
 #include "nrf_log_default_backends.h"
-#endif
+//#endif
 
 /*lib specific includes */
 #include "i2c_hal.h"
@@ -113,7 +113,7 @@ void twi_handler(nrf_drv_twi_evt_t const * p_event, void * p_context)
 /**
  * @brief UART initialization.
  */
-bool twi_init (uint32_t _scl, uint32_t _sda)
+bool twi_init (void)
 {
     ret_code_t err_code;
 
@@ -123,8 +123,8 @@ bool twi_init (uint32_t _scl, uint32_t _sda)
      * */
     
     const nrf_drv_twi_config_t twi_device = {
-       .scl                = _scl,
-       .sda                = _sda,
+       .scl                = ARDUINO_SCL_PIN,
+       .sda                = ARDUINO_SDA_PIN,
        .frequency          = NRF_DRV_TWI_FREQ_400K, // NRF_DRV_TWI_FREQ_400K for bno055
        .interrupt_priority = APP_IRQ_PRIORITY_HIGH, //TODO: consider making this configurable
        .clear_bus_init     = false
