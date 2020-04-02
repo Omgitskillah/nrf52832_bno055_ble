@@ -11,9 +11,16 @@
 #include "nrf_log_default_backends.h"
 #endif
 
+#define HW_I2C
+
+#ifdef HW_I2C
+#include "i2c_hal.h"
+#else
+#include "soft_i2c.h"
+#endif
+
 #include "pca10040.h"
 #include "ble_advdata.h"
-#include "soft_i2c.h"
 #include "bno055.h"
 #include "bno055_conf.h"
 
@@ -54,7 +61,11 @@ bool bno055_write_reg(uint8_t _reg, uint8_t _data)
 {
   uint8_t _buff[2] = {_reg, _data};
   //write sequence
+#ifdef HW_I2C
+  if( !i2c_write( bno055_address, _buff, sizeof(_buff), false ) ) return false;
+#else
   if( !i2c_write( bno055_address, _buff, sizeof(_buff) ) ) return false;
+#endif
   // debug data here
   return true;
 }
@@ -77,7 +88,11 @@ bool bno055_read_reg(uint8_t _reg, uint8_t *_buff, uint8_t _length)
 {
   uint8_t reg_buff[1] = {_reg};
   //write sequence
+#ifdef HW_I2C
+  if( !i2c_write( bno055_address, reg_buff, sizeof(reg_buff), false ) ) return false;
+#else
   if( !i2c_write( bno055_address, reg_buff, sizeof(reg_buff) ) ) return false;
+#endif
   //Read sequence
   if( !i2c_read( bno055_address, _buff, _length) ) return false;
 

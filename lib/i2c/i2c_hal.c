@@ -113,7 +113,7 @@ void twi_handler(nrf_drv_twi_evt_t const * p_event, void * p_context)
 /**
  * @brief UART initialization.
  */
-bool twi_init (void)
+bool i2c_init (void)
 {
     ret_code_t err_code;
 

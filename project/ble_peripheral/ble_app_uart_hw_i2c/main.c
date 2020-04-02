@@ -17,7 +17,7 @@
 int main(void)
 {
     ble_uart_peripheral_init();
-    twi_init();
+    i2c_init();
   
     // Start execution.
 #ifdef LOG_BLE_UART_PERIPHERAL    
