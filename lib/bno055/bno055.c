@@ -20,6 +20,7 @@
 #endif
 
 #include "pca10040.h"
+#include "nrf_gpio.h"
 #include "ble_advdata.h"
 #include "bno055.h"
 #include "bno055_conf.h"
@@ -36,6 +37,11 @@
  * Handle interrupts and how to set them
  * Self test mode 
 */
+
+#define BNO_SDA   26
+#define BNO_SCL   27
+#define BNO_INT   2
+#define BNO_PS0   3
 
 /* fx declaration */
 bool bno055_write_reg(uint8_t _reg, uint8_t _data);
@@ -187,13 +193,43 @@ bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len)
  */
 bool bno055_init(uint8_t * _id)
 {
+  nrf_gpio_cfg_output(BNO_PS0);
+  nrf_gpio_cfg_input(BNO_INT, NRF_GPIO_PIN_NOPULL);
+  bno055_set_i2c_protocol(STANDARD_I2C);
   // set to 
-  i2c_init();
+  i2c_init(BNO_SDA, BNO_SCL);
 
   if(!bno055_set_op_mode(NDOF)) return false;
   if(!bno055_get_chip_ID(_id)) return false;
 
   return true;
+}
+
+/**
+ * fx: void bno055_set_i2c_protocol(bno_i2c_protocol _ps)
+ * select an I2C protocol for the BNO
+ * 
+ * Arguments
+ * -----------
+ * The protocol required
+ * STANDARD_I2C
+ * HID_OVER_I2C
+ * 
+ * return
+ * -----------
+ * void
+ */
+
+void bno055_set_i2c_protocol( bno_i2c_protocol _ps )
+{
+  if( _ps == STANDARD_I2C )
+  {
+    nrf_gpio_pin_clear(BNO_PS0);
+  }
+  else
+  {
+    nrf_gpio_pin_set(BNO_PS0);
+  } 
 }
 
 /**

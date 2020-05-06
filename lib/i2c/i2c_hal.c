@@ -113,18 +113,13 @@ void twi_handler(nrf_drv_twi_evt_t const * p_event, void * p_context)
 /**
  * @brief UART initialization.
  */
-bool i2c_init (void)
+bool i2c_init (uint32_t _sda, uint32_t _scl)
 {
     ret_code_t err_code;
-
-    /**
-     * .scl                = ARDUINO_SCL_PIN,
-     * .sda                = ARDUINO_SDA_PIN,
-     * */
     
     const nrf_drv_twi_config_t twi_device = {
-       .scl                = ARDUINO_SCL_PIN,
-       .sda                = ARDUINO_SDA_PIN,
+       .scl                = _scl,
+       .sda                = _sda,
        .frequency          = NRF_DRV_TWI_FREQ_400K, // NRF_DRV_TWI_FREQ_400K for bno055
        .interrupt_priority = APP_IRQ_PRIORITY_HIGH, //TODO: consider making this configurable
        .clear_bus_init     = false
