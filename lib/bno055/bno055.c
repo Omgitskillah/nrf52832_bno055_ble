@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -38,10 +39,10 @@
  * Self test mode 
 */
 
-#define BNO_SDA   26
-#define BNO_SCL   27
-#define BNO_INT   2
-#define BNO_PS0   3
+uint32_t BNO_SDA = 17;
+uint32_t BNO_SCL = 18;
+uint32_t BNO_INT = 2;
+uint32_t BNO_PS0 = 3;
 
 /* fx declaration */
 bool bno055_write_reg(uint8_t _reg, uint8_t _data);
@@ -92,7 +93,8 @@ bool bno055_write_reg(uint8_t _reg, uint8_t _data)
  */
 bool bno055_read_reg(uint8_t _reg, uint8_t *_buff, uint8_t _length)
 {
-  uint8_t reg_buff[1] = {_reg};
+  uint8_t reg_buff[1];
+  reg_buff[0] = _reg;
   //write sequence
 #ifdef HW_I2C
   if( !i2c_write( bno055_address, reg_buff, sizeof(reg_buff), false ) ) return false;
@@ -144,8 +146,8 @@ bool bno055_set_op_mode(uint8_t _mode)
 {
   // write to op mode register
   if(!bno055_write_reg((uint8_t)REG_OPR_MODE, _mode)) return false; // no point in delaying if write failed
-  // must delay at least 7ms for all chages except to CONFIGMODE where the dalay is at least 19ms
-  nrf_delay_ms(OPR_MODE_DELAY);
+  // must delay at least 7ms for all changes except to CONFIGMODE where the dalay is at least 19ms
+  nrf_delay_ms((uint32_t)OPR_MODE_DELAY);
   return true;
 }
 
@@ -197,10 +199,10 @@ bool bno055_init(uint8_t * _id)
   nrf_gpio_cfg_input(BNO_INT, NRF_GPIO_PIN_NOPULL);
   bno055_set_i2c_protocol(STANDARD_I2C);
   // set to 
-  i2c_init(BNO_SDA, BNO_SCL);
+  if( !i2c_init(BNO_SDA, BNO_SCL)) return false;
 
-  if(!bno055_set_op_mode(NDOF)) return false;
   if(!bno055_get_chip_ID(_id)) return false;
+  if(!bno055_set_op_mode(NDOF)) return false;
 
   return true;
 }
