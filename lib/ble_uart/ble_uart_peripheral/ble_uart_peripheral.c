@@ -664,7 +664,7 @@ static void idle_state_handle(void)
 #ifdef LOG_BLE_UART_PERIPHERAL    
     UNUSED_RETURN_VALUE(NRF_LOG_PROCESS());
 #endif    
-    nrf_pwr_mgmt_run();
+//    nrf_pwr_mgmt_run();
 }
 
 

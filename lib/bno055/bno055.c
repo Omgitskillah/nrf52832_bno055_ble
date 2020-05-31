@@ -48,7 +48,7 @@ uint32_t BNO_PS0 = 3;
 bool bno055_write_reg(uint8_t _reg, uint8_t _data);
 bool bno055_read_reg(uint8_t _reg, uint8_t *_buff, uint8_t _length);
 bool bno055_get_chip_ID(uint8_t *_buff);
-bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len);
+bool read_data_regs(uint8_t * regs, uint8_t num_of_regs,  uint16_t * _buff, uint8_t _buff_len);
 
 
 /**
@@ -152,7 +152,7 @@ bool bno055_set_op_mode(uint8_t _mode)
 }
 
 /**
- * fx: read_data_regs(uint8_t * regs, uint16_t * _buff)
+ * fx: bool read_data_regs(uint8_t * regs, uint8_t num_of_regs,  uint16_t * _buff, uint8_t _buff_len)
  * reads data registers, appends to 16 bits and stores in array
  * _buff[0] = x, _buff[1] = y, _buff[2] = z
  * 
@@ -165,12 +165,11 @@ bool bno055_set_op_mode(uint8_t _mode)
  * ---------------
  * true if successful 
  */
-bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len)
+bool read_data_regs(uint8_t * regs, uint8_t num_of_regs,  uint16_t * _buff, uint8_t _buff_len)
 {
-  uint8_t len_reg = sizeof(regs);
-  uint8_t bytes[len_reg];
+  uint8_t bytes[num_of_regs];
 
-  for(int i = 0; i < len_reg; i++)
+  for(int i = 0; i < num_of_regs; i++)
   {
     if(!bno055_read_reg( regs[i], &bytes[i], LEN_DATA)) return false; 
     // if at any point this sequence fails, return false
@@ -178,8 +177,10 @@ bool read_data_regs(uint8_t * regs, uint16_t * _buff, uint8_t _buff_len)
   //populate  buffer argument
   for(int j = 0; j < _buff_len; j++)
   {
-    _buff[j] = (uint16_t)(bytes[len_reg-((j+1)*2)] << 8) | bytes[len_reg-((j*2)+1)];
+    _buff[j] = (uint16_t)(bytes[num_of_regs-((j+1)*2)] << 8) | bytes[num_of_regs-((j*2)+1)];
   } 
+
+  return true;
 }
 
 /**
@@ -258,7 +259,7 @@ bool read_grv_data(uint16_t * _data_arr)
     (uint8_t)REG_GRV_Data_X_MSB,
     (uint8_t)REG_GRV_Data_X_LSB};
   
-  return read_data_regs(regs, _data_arr, 3);
+  return read_data_regs(regs, sizeof(regs), _data_arr, 3);
 }
 
 bool read_lia_data(uint16_t * _data_arr)
@@ -271,7 +272,7 @@ bool read_lia_data(uint16_t * _data_arr)
     (uint8_t)REG_LIA_Data_X_MBS,
     (uint8_t)REG_LIA_Data_X_LSB};
   
-  return read_data_regs(regs, _data_arr, 3);
+  return read_data_regs(regs, sizeof(regs), _data_arr, 3);
 }
 
 bool read_gyr_data(uint16_t * _data_arr)
@@ -284,7 +285,7 @@ bool read_gyr_data(uint16_t * _data_arr)
     (uint8_t)REG_GYR_DATA_X_MSB,
     (uint8_t)REG_GYR_DATA_X_LSB};
   
-  return read_data_regs(regs, _data_arr, 3);
+  return read_data_regs(regs, sizeof(regs), _data_arr, 3);
 }
 
 bool read_mag_data(uint16_t * _data_arr)
@@ -297,7 +298,7 @@ bool read_mag_data(uint16_t * _data_arr)
     (uint8_t)REG_MAG_DATA_X_MSB,
     (uint8_t)REG_MAG_DATA_X_LSB};
   
-  return read_data_regs(regs, _data_arr, 3);
+  return read_data_regs(regs, sizeof(regs), _data_arr, 3);
 }
 
 bool read_acc_data(uint16_t * _data_arr)
@@ -310,7 +311,7 @@ bool read_acc_data(uint16_t * _data_arr)
     (uint8_t)REG_ACC_DATA_X_MSB,
     (uint8_t)REG_ACC_DATA_X_LSB};
   
-  return read_data_regs(regs, _data_arr, 3);
+  return read_data_regs(regs, sizeof(regs), _data_arr, 3);
 }
 
 bool read_qua_data(uint16_t * _data_arr) // Size of 4 elements
@@ -325,7 +326,7 @@ bool read_qua_data(uint16_t * _data_arr) // Size of 4 elements
     (uint8_t)REG_QUA_Data_w_MSB,
     (uint8_t)REG_QUA_Data_w_LSB};
   
-  return read_data_regs(regs, _data_arr, 4);
+  return read_data_regs(regs, sizeof(regs), _data_arr, 4);
 }
 
 bool read_eul_pitch_data(uint16_t * _data_arr) // Size of 1 elements
@@ -334,7 +335,7 @@ bool read_eul_pitch_data(uint16_t * _data_arr) // Size of 1 elements
     (uint8_t)REG_EUL_Pitch_MSB,
     (uint8_t)REG_EUL_Pitch_LSB};
   
-  return read_data_regs(regs, _data_arr, 1);
+  return read_data_regs(regs, sizeof(regs), _data_arr, 1);
 }
 
 bool read_eul_roll_data(uint16_t * _data_arr) // Size of 1 elements
@@ -343,7 +344,7 @@ bool read_eul_roll_data(uint16_t * _data_arr) // Size of 1 elements
     (uint8_t)REG_EUL_Roll_MSB,
     (uint8_t)REG_EUL_Roll_LSB};
   
-  return read_data_regs(regs, _data_arr, 1);
+  return read_data_regs(regs, sizeof(regs), _data_arr, 1);
 }
 
 bool read_eul_heading_data(uint16_t * _data_arr) // Size of 1 elements
@@ -352,5 +353,5 @@ bool read_eul_heading_data(uint16_t * _data_arr) // Size of 1 elements
     (uint8_t)REG_EUL_Heading_MSB,
     (uint8_t)REG_EUL_Heading_LSB};
   
-  return read_data_regs(regs, _data_arr, 1);
+  return read_data_regs(regs, sizeof(regs), _data_arr, 1);
 }

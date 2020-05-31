@@ -44,7 +44,7 @@ int main(void)
         
         if( read_qua_data(qua_data) )
         {
-          sprintf(output_data, "ID: %02X; Q(w,x,y,z): %d, %d, %d, %d \n", bno_id, qua_data[0], qua_data[1], qua_data[2], qua_data[3]);
+          sprintf(output_data, "%02X:%d,%d,%d,%d\n", bno_id, qua_data[0], qua_data[1], qua_data[2], qua_data[3]);
 
           ble_uart_peripheral_send_to_ble(output_data, sizeof(output_data));
           ble_uart_peripheral_print_to_uart(output_data, sizeof(output_data));
