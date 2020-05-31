@@ -26,7 +26,7 @@
 static const nrf_drv_twi_t m_twi = NRF_DRV_TWI_INSTANCE(TWI_INSTANCE_ID);
 
 /* Indicates if operation on TWI has ended. */
-static volatile bool m_xfer_done = false;
+static volatile bool m_xfer_done = true;
 
 /* data buffer */
 uint8_t i2c_data;
@@ -47,7 +47,12 @@ uint8_t i2c_data;
 bool i2c_write( uint8_t _address, uint8_t const *_p_data, uint8_t _length, bool _restart)
 {
     // Note that there is no error check during this process
+    do
+    {
+        __WFE();
+    }while (m_xfer_done == false);
     ret_code_t err_code;
+    m_xfer_done = false;
     err_code = nrf_drv_twi_tx(&m_twi, _address, _p_data, _length, _restart);
     APP_ERROR_CHECK(err_code);
     while (m_xfer_done == false);
@@ -70,8 +75,12 @@ bool i2c_write( uint8_t _address, uint8_t const *_p_data, uint8_t _length, bool 
 bool i2c_read( uint8_t _address, uint8_t * _buff, uint8_t _length)
 {
     // Note that there is no error check during this process
-    m_xfer_done = false;
     /* Read 1 byte from the specified address - skip 3 bits dedicated for fractional part of temperature. */
+    do
+    {
+        __WFE();
+    }while (m_xfer_done == false);
+    m_xfer_done = false;
     ret_code_t err_code = nrf_drv_twi_rx(&m_twi, _address, _buff, _length);
     APP_ERROR_CHECK(err_code);
     while (m_xfer_done == false);
@@ -113,19 +122,14 @@ void twi_handler(nrf_drv_twi_evt_t const * p_event, void * p_context)
 /**
  * @brief UART initialization.
  */
-bool i2c_init (void)
+bool i2c_init (uint32_t _sda, uint32_t _scl)
 {
     ret_code_t err_code;
-
-    /**
-     * .scl                = ARDUINO_SCL_PIN,
-     * .sda                = ARDUINO_SDA_PIN,
-     * */
     
     const nrf_drv_twi_config_t twi_device = {
-       .scl                = ARDUINO_SCL_PIN,
-       .sda                = ARDUINO_SDA_PIN,
-       .frequency          = NRF_DRV_TWI_FREQ_400K, // NRF_DRV_TWI_FREQ_400K for bno055
+       .scl                = _scl,
+       .sda                = _sda,
+       .frequency          = NRF_DRV_TWI_FREQ_100K, // NRF_DRV_TWI_FREQ_400K for bno055
        .interrupt_priority = APP_IRQ_PRIORITY_HIGH, //TODO: consider making this configurable
        .clear_bus_init     = false
     };

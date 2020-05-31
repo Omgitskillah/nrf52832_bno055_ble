@@ -2,7 +2,7 @@
 #define _BNO055_CONF_H_
 
 // Device I2C address
-#define bno055_address  0x28
+#define bno055_address  (uint8_t)0x29
 
 // Chip ID reg defines
 #define REG_CHIP_ID     0x00

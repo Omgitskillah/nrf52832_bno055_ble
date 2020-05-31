@@ -15,7 +15,7 @@ bool htu21d_nh_get_data(uint8_t _command, uint32_t _delay, uint16_t *_data_buffe
 bool htu21d_init()
 {
   // set to 
-  i2c_init();
+  i2c_init(ARDUINO_SDA_PIN, ARDUINO_SCL_PIN);
   nrf_delay_ms((uint8_t)HTU21D_STRATUP_DELAY);
 }
 

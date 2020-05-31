@@ -23,6 +23,7 @@
       debug_target_connection="J-Link"
       gcc_debugging_level="Level 3"
       gcc_entry_point="Reset_Handler"
+      gcc_optimization_level="Level 0"
       linker_output_format="hex"
       linker_printf_fmt_level="long"
       linker_printf_width_precision_supported="Yes"
@@ -105,11 +106,15 @@
           </folder>
         </folder>
         <folder Name="i2c">
-          <file file_name="../../../../../../lib/i2c/i2c_hal.c" />
+          <file file_name="../../../../../../lib/i2c/i2c_hal.c">
+            <configuration Name="Common" gcc_optimization_level="Level 0" />
+          </file>
           <file file_name="../../../../../../lib/i2c/i2c_hal.h" />
         </folder>
         <folder Name="bno055">
-          <file file_name="../../../../../../lib/bno055/bno055.c" />
+          <file file_name="../../../../../../lib/bno055/bno055.c">
+            <configuration Name="Common" gcc_optimization_level="Level 0" />
+          </file>
           <file file_name="../../../../../../lib/bno055/bno055.h" />
           <file file_name="../../../../../../lib/bno055/bno055_conf.h" />
         </folder>
