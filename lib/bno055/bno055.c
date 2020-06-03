@@ -39,8 +39,8 @@
  * Self test mode 
 */
 
-uint32_t BNO_SDA = 17;
-uint32_t BNO_SCL = 18;
+uint32_t BNO_SDA = 26;
+uint32_t BNO_SCL = 27;
 uint32_t BNO_INT = 2;
 uint32_t BNO_PS0 = 3;
 
