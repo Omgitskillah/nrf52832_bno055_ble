@@ -73,9 +73,12 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="27" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="3" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="26" y="66" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="1" top="0" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="42" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../lib/bno055/bno055.c" selected="0" top="10" codecName="Default"/>
   <SessionOpenFile windowGroup="DockEditLeft" x="0" y="4" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../lib/bno055/bno055_conf.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="107" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/nrf_log_ctrl.h" selected="0" top="81" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="112" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/nrf_log.h" selected="0" top="93" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="260" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../../../../components/libraries/log/src/nrf_log_internal.h" selected="0" top="241" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="bno055_ble" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="C:/git/nrf52832_bno055_ble/lib/bno055" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

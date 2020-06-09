@@ -43,7 +43,7 @@
 
 #define APP_ADV_INTERVAL                64                                          /**< The advertising interval (in units of 0.625 ms. This value corresponds to 40 ms). */
 
-#define APP_ADV_DURATION                18000                                       /**< The advertising duration (180 seconds) in units of 10 milliseconds. */
+#define APP_ADV_DURATION                18000                                       /**< The advertising duration (180 seconds/ 3 mins) in units of 10 milliseconds. */
 
 #define MIN_CONN_INTERVAL               MSEC_TO_UNITS(20, UNIT_1_25_MS)             /**< Minimum acceptable connection interval (20 ms), Connection interval uses 1.25 ms units. */
 #define MAX_CONN_INTERVAL               MSEC_TO_UNITS(75, UNIT_1_25_MS)             /**< Maximum acceptable connection interval (75 ms), Connection interval uses 1.25 ms units. */
@@ -312,7 +312,9 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
             APP_ERROR_CHECK(err_code);
             break;
         case BLE_ADV_EVT_IDLE:
-            sleep_mode_enter();
+        // we should't turn off the device while other peripherals are running
+        // Use this somewhere else in the application
+//            sleep_mode_enter();
             break;
         default:
             break;
@@ -464,7 +466,8 @@ void bsp_event_handler(bsp_event_t event)
     switch (event)
     {
         case BSP_EVENT_SLEEP:
-            sleep_mode_enter();
+        // No application should call this function while system is running
+//            sleep_mode_enter();
             break;
 
         case BSP_EVENT_DISCONNECT:
@@ -663,7 +666,8 @@ static void idle_state_handle(void)
 {
 #ifdef LOG_BLE_UART_PERIPHERAL    
     UNUSED_RETURN_VALUE(NRF_LOG_PROCESS());
-#endif    
+#endif
+// don't let one app manage power when in idle state    
 //    nrf_pwr_mgmt_run();
 }
 

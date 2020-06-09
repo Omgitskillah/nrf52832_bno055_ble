@@ -63,7 +63,7 @@ int main(void)
           ble_uart_peripheral_send_to_ble(output_data, sizeof(output_data));
           ble_uart_peripheral_print_to_uart(output_data, sizeof(output_data));
 #ifdef LOG_BLE_UART_PERIPHERAL 
-          NRF_LOG_INFO(output_data);
+          NRF_LOG_INFO("%s", output_data);
           NRF_LOG_FLUSH();
 #endif
         }
